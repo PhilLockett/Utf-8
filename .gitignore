@@ -1,0 +1,7 @@
+.vscode/
+*.o
+*.exe
+unittest.*
+profile.txt
+results.txt
+timings.txt
