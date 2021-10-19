@@ -1,10 +1,10 @@
-# utf_8
+# Utf-8
 
-Unicode to utf-8 and vice versa conversion code.
+Unicode to UTF-8 and vice versa conversion code.
 
 ## Overview
 
-The small library privdes to functions to convert between utf-8 and unicode.
+The small library provides to functions to convert between utf-8 and unicode.
 
 ### unicodeToUtf8()
 
@@ -22,15 +22,15 @@ character and `length` is set to the utf-8 byte count.
 
     bool utf8ToUnicode(const std::string & buffer, int & unicode, int & length);
 
-## Cloning and Running (to be updated)
+## Cloning and Running
 
 The test code is dependent on UnitTest. To compile and run the Utf-8 test code
 you first need to clone the unit test code, then copy unittest.cpp and 
-unittest.h into the Logger directory before executing make.
+unittest.h into the Utf-8 directory before executing make.
 
     git clone https://github.com/PhilLockett/UnitTest.git
 
-To clone, build and run the Logger code, including the test code, execute the 
+To clone, build and run the Utf-8 code, including the test code, execute the 
 following unix/linux commands:
 
     git clone https://github.com/PhilLockett/Utf-8.git
