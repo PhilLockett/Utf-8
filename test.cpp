@@ -178,56 +178,56 @@ UNIT_TEST(test30, "utf8ToUnicode - Test $ 1 char array.")
 int unicode{};
 int length{};
 
-    const char data1[2]{ 0x24, 0 };
-    REQUIRE(utf8ToUnicode(data1, unicode, length) == true)
+    const char data0[2]{ 0x24, 0 };
+    REQUIRE(utf8ToUnicode(data0, unicode, length) == true)
     REQUIRE(unicode == 0x24)
     REQUIRE(length == 1)
 
 NEXT_CASE(test31, "utf8ToUnicode - Test ¢ 2 char array.")
 
-    const char data2[3]{ (char)0xC2, (char)0xA2, 0 };
-    REQUIRE(utf8ToUnicode(data2, unicode, length) == true)
+    const char data1[3]{ (char)0xC2, (char)0xA2, 0 };
+    REQUIRE(utf8ToUnicode(data1, unicode, length) == true)
     REQUIRE(unicode == 0xA2)
     REQUIRE(length == 2)
 
 NEXT_CASE(test32, "utf8ToUnicode - Test € 3 char array.")
 
-    const char data3[4]{ (char)0xE2, (char)0x82, (char)0xAC, 0 };
-    REQUIRE(utf8ToUnicode(data3, unicode, length) == true)
+    const char data2[4]{ (char)0xE2, (char)0x82, (char)0xAC, 0 };
+    REQUIRE(utf8ToUnicode(data2, unicode, length) == true)
     REQUIRE(unicode == 0x20AC)
     REQUIRE(length == 3)
 
 NEXT_CASE(test33, "utf8ToUnicode - Test 𐍈 4 char array.")
 
-    const char data4[5]{ (char)0xF0, (char)0x90, (char)0x8D, (char)0x88, 0 };
-    REQUIRE(utf8ToUnicode(data4, unicode, length) == true)
+    const char data3[5]{ (char)0xF0, (char)0x90, (char)0x8D, (char)0x88, 0 };
+    REQUIRE(utf8ToUnicode(data3, unicode, length) == true)
     REQUIRE(unicode == 0x10348)
     REQUIRE(length == 4)
 
 NEXT_CASE(test34, "utf8ToUnicode - Test ¢ 2 char array without continuation byte.")
 
-    const char data5[3]{ (char)0xC2, (char)0x22, 0 };
-    REQUIRE(utf8ToUnicode(data5, unicode, length) == false)
+    const char data4[3]{ (char)0xC2, (char)0x22, 0 };
+    REQUIRE(utf8ToUnicode(data4, unicode, length) == false)
 
 NEXT_CASE(test35, "utf8ToUnicode - Test ¢ 1 char array too short.")
 
-    const char data6[2]{ (char)0xC2, 0 };
-    REQUIRE(utf8ToUnicode(data6, unicode, length) == false)
+    const char data5[2]{ (char)0xC2, 0 };
+    REQUIRE(utf8ToUnicode(data5, unicode, length) == false)
 
 NEXT_CASE(test36, "utf8ToUnicode - Test 𐍈 4 char array missing continuation byte.")
 
-    const char data7[5]{ (char)0xF0, (char)0x90, (char)0x8D, (char)0x08, 0 };
-    REQUIRE(utf8ToUnicode(data7, unicode, length) == false)
+    const char data6[5]{ (char)0xF0, (char)0x90, (char)0x8D, (char)0x08, 0 };
+    REQUIRE(utf8ToUnicode(data6, unicode, length) == false)
 
 NEXT_CASE(test37, "utf8ToUnicode - Test unexpected continuation byte.")
 
-    const char data8[2]{ (char)0xA4, 0 };
-    REQUIRE(utf8ToUnicode(data8, unicode, length) == false)
+    const char data7[2]{ (char)0xA4, 0 };
+    REQUIRE(utf8ToUnicode(data7, unicode, length) == false)
 
 NEXT_CASE(test38, "utf8ToUnicode - Test € overlong encoding.")
 
-    const char data9[5]{ (char)0xF0, (char)0x82, (char)0x82, (char)0xAC, 0 };
-    REQUIRE(utf8ToUnicode(data9, unicode, length) == false)
+    const char data8[5]{ (char)0xF0, (char)0x82, (char)0x82, (char)0xAC, 0 };
+    REQUIRE(utf8ToUnicode(data8, unicode, length) == false)
 
 END_TEST
 
