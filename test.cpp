@@ -38,39 +38,46 @@
 #include "utf_8.h"
 
 
+const char AData[2]{ 0x41, 0 };
+const char zData[2]{ 0x7A, 0 };
+const char copyrightData[3]{ (char)0xC2, (char)0xA9, 0 };
+const char umlautData[3]{ (char)0xC3, (char)0xB6, 0 };
+const char upArrowData[4]{ (char)0xE2, (char)0xAD, (char)0xA1, 0 };
+const char clubs3Data[5]{ (char)0xF0, (char)0x9F, (char)0x83, (char)0x93, 0 };
+
 
 /**
  * @section 0 - unicodeToUtf8 translation test.
  */
-UNIT_TEST(test0, "unicodeToUtf8 - Test 0 character.")
+UNIT_TEST(test0, "unicodeToUtf8 - Test null character.")
 
     SET_TOLERANCE(0.0)          // Don't care about timing yet!
 
     REQUIRE(unicodeToUtf8(0).compare("") == 0)
 
-NEXT_CASE(test1, "unicodeToUtf8 - Test A character.")
+NEXT_CASE(test1, "unicodeToUtf8 - Test 'A' character.")
 
-    REQUIRE(unicodeToUtf8(65).compare("A") == 0)
+    REQUIRE(unicodeToUtf8(0x41).compare(AData) == 0)
 
-NEXT_CASE(test2, "unicodeToUtf8 - Test z character.")
+NEXT_CASE(test2, "unicodeToUtf8 - Test 'z' character.")
 
-    REQUIRE(unicodeToUtf8(122).compare("z") == 0)
+    REQUIRE(unicodeToUtf8(0x7A).compare(zData) == 0)
 
 NEXT_CASE(test3, "unicodeToUtf8 - Test copyright character.")
 
-    REQUIRE(unicodeToUtf8(169).compare("©") == 0)
+    REQUIRE(unicodeToUtf8(0xA9).compare(copyrightData) == 0)
 
 NEXT_CASE(test4, "unicodeToUtf8 - Test o umlaut character.")
 
-    REQUIRE(unicodeToUtf8(246).compare("ö") == 0)
+    REQUIRE(unicodeToUtf8(0xF6).compare(umlautData) == 0)
 
 NEXT_CASE(test5, "unicodeToUtf8 - Test upwards triangle headed arrow character.")
 
-    REQUIRE(unicodeToUtf8(0x2B61).compare("⭡") == 0)
+    REQUIRE(unicodeToUtf8(0x2B61).compare(upArrowData) == 0)
 
 NEXT_CASE(test6, "unicodeToUtf8 - Test 3 of clubs character.")
 
-    REQUIRE(unicodeToUtf8(0x1F0D3).compare("🃓") == 0)
+    REQUIRE(unicodeToUtf8(0x1F0D3).compare(clubs3Data) == 0)
 
 END_TEST
 
@@ -80,18 +87,18 @@ END_TEST
  */
 extern size_t getUtf8Length(int unicode, char & lead);
 
-UNIT_TEST(test10, "getUtf8Length - Test 0 character length.")
+UNIT_TEST(test10, "getUtf8Length - Test null character length.")
 char leadByte{};
 
     REQUIRE(getUtf8Length(0, leadByte) == 1)
     REQUIRE(leadByte == 0)
 
-NEXT_CASE(test11, "getUtf8Length - Test A character length.")
+NEXT_CASE(test11, "getUtf8Length - Test 'A' character length.")
 
     REQUIRE(getUtf8Length(0x41, leadByte) == 1)
     REQUIRE(leadByte == 0x41)
 
-NEXT_CASE(test12, "getUtf8Length - Test z character length.")
+NEXT_CASE(test12, "getUtf8Length - Test 'z' character length.")
 
     REQUIRE(getUtf8Length(0x7A, leadByte) == 1)
     REQUIRE(leadByte == 0x7A)
@@ -122,45 +129,45 @@ END_TEST
 /**
  * @section 2 - utf8ToUnicode translation test.
  */
-UNIT_TEST(test20, "utf8ToUnicode - Test 0 character.")
+UNIT_TEST(test20, "utf8ToUnicode - Test null character.")
 int unicode{};
 int length{};
 
     REQUIRE(utf8ToUnicode("", unicode, length) == false)
 
-NEXT_CASE(test21, "utf8ToUnicode - Test A character.")
+NEXT_CASE(test21, "utf8ToUnicode - Test 'A' character.")
 
-    REQUIRE(utf8ToUnicode("A", unicode, length) == true)
-    REQUIRE(unicode == 65)
+    REQUIRE(utf8ToUnicode(AData, unicode, length) == true)
+    REQUIRE(unicode == 0x41)
     REQUIRE(length == 1)
 
-NEXT_CASE(test22, "utf8ToUnicode - Test z character.")
+NEXT_CASE(test22, "utf8ToUnicode - Test 'z' character.")
 
-    REQUIRE(utf8ToUnicode("z", unicode, length) == true)
-    REQUIRE(unicode == 122)
+    REQUIRE(utf8ToUnicode(zData, unicode, length) == true)
+    REQUIRE(unicode == 0x7A)
     REQUIRE(length == 1)
 
 NEXT_CASE(test23, "utf8ToUnicode - Test copyright character.")
 
-    REQUIRE(utf8ToUnicode("©", unicode, length) == true)
-    REQUIRE(unicode == 169)
+    REQUIRE(utf8ToUnicode(copyrightData, unicode, length) == true)
+    REQUIRE(unicode == 0xA9)
     REQUIRE(length == 2)
 
 NEXT_CASE(test24, "utf8ToUnicode - Test o umlaut character.")
 
-    REQUIRE(utf8ToUnicode("ö", unicode, length) == true)
-    REQUIRE(unicode == 246)
+    REQUIRE(utf8ToUnicode(umlautData, unicode, length) == true)
+    REQUIRE(unicode == 0xF6)
     REQUIRE(length == 2)
 
 NEXT_CASE(test25, "utf8ToUnicode - Test upwards triangle headed arrow character.")
 
-    REQUIRE(utf8ToUnicode("⭡", unicode, length) == true)
+    REQUIRE(utf8ToUnicode(upArrowData, unicode, length) == true)
     REQUIRE(unicode == 0x2B61)
     REQUIRE(length == 3)
 
 NEXT_CASE(test26, "utf8ToUnicode - Test 3 of clubs character.")
 
-    REQUIRE(utf8ToUnicode("🃓", unicode, length) == true)
+    REQUIRE(utf8ToUnicode(clubs3Data, unicode, length) == true)
     REQUIRE(unicode == 0x1F0D3)
     REQUIRE(length == 4)
 
@@ -174,60 +181,60 @@ END_TEST
  *     https://en.wikipedia.org/wiki/UTF-8#Overlong_encodings
  *     https://en.wikipedia.org/wiki/UTF-8#Invalid_sequences_and_error_handling
  */
-UNIT_TEST(test30, "utf8ToUnicode - Test $ 1 char array.")
+UNIT_TEST(test30, "utf8ToUnicode - Test '$' 1 char array.")
 int unicode{};
 int length{};
 
-    const char data0[2]{ 0x24, 0 };
-    REQUIRE(utf8ToUnicode(data0, unicode, length) == true)
+    const char dollarData[2]{ 0x24, 0 };
+    REQUIRE(utf8ToUnicode(dollarData, unicode, length) == true)
     REQUIRE(unicode == 0x24)
     REQUIRE(length == 1)
 
-NEXT_CASE(test31, "utf8ToUnicode - Test ¢ 2 char array.")
+NEXT_CASE(test31, "utf8ToUnicode - Test cent 2 char array.")
 
-    const char data1[3]{ (char)0xC2, (char)0xA2, 0 };
-    REQUIRE(utf8ToUnicode(data1, unicode, length) == true)
+    const char centData[3]{ (char)0xC2, (char)0xA2, 0 };
+    REQUIRE(utf8ToUnicode(centData, unicode, length) == true)
     REQUIRE(unicode == 0xA2)
     REQUIRE(length == 2)
 
-NEXT_CASE(test32, "utf8ToUnicode - Test € 3 char array.")
+NEXT_CASE(test32, "utf8ToUnicode - Test Euro 3 char array.")
 
-    const char data2[4]{ (char)0xE2, (char)0x82, (char)0xAC, 0 };
-    REQUIRE(utf8ToUnicode(data2, unicode, length) == true)
+    const char euroData[4]{ (char)0xE2, (char)0x82, (char)0xAC, 0 };
+    REQUIRE(utf8ToUnicode(euroData, unicode, length) == true)
     REQUIRE(unicode == 0x20AC)
     REQUIRE(length == 3)
 
-NEXT_CASE(test33, "utf8ToUnicode - Test 𐍈 4 char array.")
+NEXT_CASE(test33, "utf8ToUnicode - Test Hwair 4 char array.")
 
-    const char data3[5]{ (char)0xF0, (char)0x90, (char)0x8D, (char)0x88, 0 };
-    REQUIRE(utf8ToUnicode(data3, unicode, length) == true)
+    const char hwairData[5]{ (char)0xF0, (char)0x90, (char)0x8D, (char)0x88, 0 };
+    REQUIRE(utf8ToUnicode(hwairData, unicode, length) == true)
     REQUIRE(unicode == 0x10348)
     REQUIRE(length == 4)
 
-NEXT_CASE(test34, "utf8ToUnicode - Test ¢ 2 char array without continuation byte.")
+NEXT_CASE(test34, "utf8ToUnicode - Test cent 2 char array without continuation byte.")
 
-    const char data4[3]{ (char)0xC2, (char)0x22, 0 };
-    REQUIRE(utf8ToUnicode(data4, unicode, length) == false)
+    const char cent2Data[3]{ (char)0xC2, (char)0x22, 0 };
+    REQUIRE(utf8ToUnicode(cent2Data, unicode, length) == false)
 
-NEXT_CASE(test35, "utf8ToUnicode - Test ¢ 1 char array too short.")
+NEXT_CASE(test35, "utf8ToUnicode - Test cent 1 char array too short.")
 
-    const char data5[2]{ (char)0xC2, 0 };
-    REQUIRE(utf8ToUnicode(data5, unicode, length) == false)
+    const char cent1Data[2]{ (char)0xC2, 0 };
+    REQUIRE(utf8ToUnicode(cent1Data, unicode, length) == false)
 
-NEXT_CASE(test36, "utf8ToUnicode - Test 𐍈 4 char array missing continuation byte.")
+NEXT_CASE(test36, "utf8ToUnicode - Test Hwair 4 char array missing continuation byte.")
 
-    const char data6[5]{ (char)0xF0, (char)0x90, (char)0x8D, (char)0x08, 0 };
-    REQUIRE(utf8ToUnicode(data6, unicode, length) == false)
+    const char hwair4Data[5]{ (char)0xF0, (char)0x90, (char)0x8D, (char)0x08, 0 };
+    REQUIRE(utf8ToUnicode(hwair4Data, unicode, length) == false)
 
 NEXT_CASE(test37, "utf8ToUnicode - Test unexpected continuation byte.")
 
-    const char data7[2]{ (char)0xA4, 0 };
-    REQUIRE(utf8ToUnicode(data7, unicode, length) == false)
+    const char continuationData[2]{ (char)0xA4, 0 };
+    REQUIRE(utf8ToUnicode(continuationData, unicode, length) == false)
 
-NEXT_CASE(test38, "utf8ToUnicode - Test € overlong encoding.")
+NEXT_CASE(test38, "utf8ToUnicode - Test Euro overlong encoding.")
 
-    const char data8[5]{ (char)0xF0, (char)0x82, (char)0x82, (char)0xAC, 0 };
-    REQUIRE(utf8ToUnicode(data8, unicode, length) == false)
+    const char euroLongData[5]{ (char)0xF0, (char)0x82, (char)0x82, (char)0xAC, 0 };
+    REQUIRE(utf8ToUnicode(euroLongData, unicode, length) == false)
 
 END_TEST
 
