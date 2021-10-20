@@ -18,7 +18,7 @@
  *
  * @section DESCRIPTION
  *
- * Test the utf-8 code Implementation.
+ * Test the UTF-8 code Implementation.
  *
  * Build using:
  *    g++ -std=c++20 -c -o test.o test.cpp

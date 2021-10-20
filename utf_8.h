@@ -18,7 +18,7 @@
  *
  * @section DESCRIPTION
  *
- * Unicode utf-8 conversion code interface.
+ * Unicode UTF-8 conversion code interface.
  */
 
 #if !defined(_UTF_8_H__20211017_1938__INCLUDED_)
