@@ -18,7 +18,7 @@
  *
  * @section DESCRIPTION
  *
- * Unicode UTF-8 conversion code interface.
+ * useCharacterRefs UTF-8 conversion code interface.
  */
 
 #if !defined(_UTF_8_H__20211017_1938__INCLUDED_)
@@ -29,6 +29,9 @@
 
 extern std::string unicodeToUtf8(int unicode);
 extern bool utf8ToUnicode(const std::string & buffer, int & unicode, int & length);
+
+extern void useCharacterRefs(std::string & buffer);
+extern std::string useCharacterRefs(const std::string & buffer);
 
 
 #endif // !defined(_UTF_8_H__20211017_1938__INCLUDED_)

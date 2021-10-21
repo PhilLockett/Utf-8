@@ -243,6 +243,36 @@ NEXT_CASE(test38, "utf8ToUnicode - Test Euro overlong encoding.")
 END_TEST
 
 
+/**
+ * @section 4 - useCharacterRefs and UTF-8 to Character Reference translation test.
+ */
+UNIT_TEST(test40, "useCharacterRefs - Test ISO/IEC 8859-1 string.")
+
+    std::string expected1{"D&#233;j&#224; vu"};
+
+    const unsigned char string1[]{ 0x44, 0xE9, 0x6a, 0xE0, 0x20, 0x76, 0x75, 0 };
+    REQUIRE(useCharacterRefs(std::string((char *)string1)).compare(expected1) == 0)
+
+NEXT_CASE(test41, "useCharacterRefs - Test UTF-8 string.")
+
+    const unsigned char string2[]{ 0x44, 0xc3, 0xa9, 0x6a, 0xc3, 0xa0, 0x20, 0x76, 0x75, 0 };
+    REQUIRE(useCharacterRefs(std::string((char *)string2)).compare(expected1) == 0)
+
+NEXT_CASE(test42, "useCharacterRefs - Test ISO/IEC 8859-1 & UTF-8 mixed string.")
+
+    const unsigned char string3[]{ 0x44, 0xE9, 0x6a, 0xc3, 0xa0, 0x20, 0x76, 0x75, 0 };
+    REQUIRE(useCharacterRefs(std::string((char *)string3)).compare(expected1) == 0)
+
+NEXT_CASE(test43, "useCharacterRefs - Test 1, 2, 3 & 4 byte count UTF-8 string.")
+
+    std::string expected2{"A &#169; &#11105; &#127187;"};
+
+    const unsigned char string4[]{ 0x41, 0x20, 0xC2, 0xA9, 0x20, 0xE2, 0xAD, 0xA1, 0x20, 0xF0, 0x9F, 0x83, 0x93, 0 };
+    REQUIRE(useCharacterRefs(std::string((char *)string4)).compare(expected2) == 0)
+
+END_TEST
+
+
 ///////////////////////////////////////////////////////////////////////////////
 
 int runTests(void)
@@ -253,6 +283,7 @@ int runTests(void)
     RUN_TEST(test10)
     RUN_TEST(test20)
     RUN_TEST(test30)
+    RUN_TEST(test40)
 
     const int err = FINISHED;
     if (err)

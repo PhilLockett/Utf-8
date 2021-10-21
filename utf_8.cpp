@@ -21,6 +21,8 @@
  * Unicode UTF-8 conversion code Implementation.
  */
 
+#include <cstring>
+
 #include "utf_8.h"
 
 
@@ -190,6 +192,88 @@ bool utf8ToUnicode(const std::string & buffer, int & unicode, int & length)
     length = len;
 
     return true;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @brief Replaces all occurences of a char sequence with a new char sequence
+ * in a std::string.
+ * 
+ * @param buffer to be updated.
+ * @param from current char sequence.
+ * @param to replacement char sequence.
+ */
+void Replace(std::string & buffer, const char * from, const char * to)
+{
+    if (strcmp(from, to) == 0)
+        return;
+
+    const size_t length{strlen(from)};
+    for (auto pos{buffer.find(from)}; pos != std::string::npos; pos = buffer.find(from, pos+1))
+        buffer.replace(pos, length, to);
+}
+
+/**
+ * @brief Replace ISO/IEC 8859-1 & UTF-8 characters in a given string with the
+ * corresponding character references necessary for HTML & XML compatibility.
+ * 
+ * @param buffer containing ISO/IEC 8859-1 & UTF-8 characters to be replaced.
+ */
+void useCharacterRefs(std::string & buffer)
+{
+    bool Found{};
+
+    do
+    {
+        Found = false;
+        for (int i = 0; i < buffer.size(); i++)
+        {
+            if (buffer[i] < 32)
+            {
+                char Old[10]{};
+
+                int value{};
+                int length{};
+                if (utf8ToUnicode(buffer.substr(i), value, length))
+                {
+                    for (int j = 0; j < length; ++j)
+                        Old[j] = buffer[i+j];
+
+                    i += length-1;
+                }
+                else
+                {
+                    Old[0] = buffer[i];
+                    value = (int)((unsigned char)buffer[i]);
+                }
+
+                std::string New{"&#" + std::to_string(value) + ";"};
+                Replace(buffer, (const char *)Old, New.c_str());
+
+                Found = true;
+
+                break;
+            }
+        }
+    } while (Found == true);
+}
+
+/**
+ * @brief Replace ISO/IEC 8859-1 & UTF-8 characters in a given string with the
+ * corresponding character references necessary for HTML & XML compatibility.
+ * 
+ * @param buffer containing ISO/IEC 8859-1 & UTF-8 characters to be replaced.
+ * 
+ * @return std::string with character references.
+ */
+std::string useCharacterRefs(const std::string & buffer)
+{
+    std::string work{buffer};
+    useCharacterRefs(work);
+
+    return work;
 }
 
 
