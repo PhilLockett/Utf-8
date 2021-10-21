@@ -38,6 +38,8 @@
 #include "utf_8.h"
 
 
+///////////////////////////////////////////////////////////////////////////////
+
 const char AData[2]{ 0x41, 0 };
 const char zData[2]{ 0x7A, 0 };
 const char copyrightData[3]{ (char)0xC2, (char)0xA9, 0 };
@@ -45,6 +47,8 @@ const char umlautData[3]{ (char)0xC3, (char)0xB6, 0 };
 const char upArrowData[4]{ (char)0xE2, (char)0xAD, (char)0xA1, 0 };
 const char clubs3Data[5]{ (char)0xF0, (char)0x9F, (char)0x83, (char)0x93, 0 };
 
+
+///////////////////////////////////////////////////////////////////////////////
 
 /**
  * @section 0 - unicodeToUtf8 translation test.
@@ -238,6 +242,8 @@ NEXT_CASE(test38, "utf8ToUnicode - Test Euro overlong encoding.")
 
 END_TEST
 
+
+///////////////////////////////////////////////////////////////////////////////
 
 int runTests(void)
 {
