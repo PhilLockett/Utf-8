@@ -22,6 +22,7 @@
  */
 
 #include <cstring>
+#include <string_view>
 
 #include "utf_8.h"
 
@@ -205,12 +206,12 @@ bool utf8ToUnicode(const std::string & buffer, int & unicode, int & length)
  * @param from current char sequence.
  * @param to replacement char sequence.
  */
-static void replace(std::string & buffer, const char * from, const char * to)
+static void replace(std::string & buffer, std::string_view & from, const char * to)
 {
-    if (strcmp(from, to) == 0)
+    if (from.compare(to) == 0)
         return;
 
-    const size_t length{strlen(from)};
+    const size_t length{from.length()};
     for (auto pos{buffer.find(from)}; pos != std::string::npos; pos = buffer.find(from, pos+1))
         buffer.replace(pos, length, to);
 }
@@ -227,34 +228,32 @@ void useCharacterRefs(std::string & buffer)
 
     do
     {
+        std::string_view work{buffer};
         Found = false;
-        for (int i = 0; i < buffer.size(); i++)
+
+        for (int i = 0; i < work.length() && !Found; i++)
         {
-            if (buffer[i] < 32)
+            if (work[i] < 32)
             {
-                char Old[10]{};
+                std::string_view Old{};
 
                 int value{};
                 int length{};
                 if (utf8ToUnicode(buffer.substr(i), value, length))
                 {
-                    for (int j = 0; j < length; ++j)
-                        Old[j] = buffer[i+j];
-
+                    Old = work.substr(i, length);
                     i += length-1;
                 }
                 else
                 {
-                    Old[0] = buffer[i];
-                    value = (int)((unsigned char)buffer[i]);
+                    Old = work.substr(i, 1);
+                    value = (int)((unsigned char)work[i]);
                 }
 
                 std::string New{"&#" + std::to_string(value) + ";"};
-                replace(buffer, (const char *)Old, New.c_str());
+                replace(buffer, Old, New.c_str());
 
                 Found = true;
-
-                break;
             }
         }
     } while (Found == true);
