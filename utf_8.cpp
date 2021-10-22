@@ -224,39 +224,39 @@ static void replace(std::string & buffer, std::string_view & from, const char * 
  */
 void useCharacterRefs(std::string & buffer)
 {
-    bool Found{};
+    bool found{};
 
     do
     {
         std::string_view work{buffer};
-        Found = false;
+        found = false;
 
-        for (int i = 0; i < work.length() && !Found; i++)
+        for (int i = 0; i < work.length() && !found; i++)
         {
             if (work[i] < 32)
             {
-                std::string_view Old{};
+                std::string_view from{};
 
                 int value{};
                 int length{};
                 if (utf8ToUnicode(buffer.substr(i), value, length))
                 {
-                    Old = work.substr(i, length);
+                    from = work.substr(i, length);
                     i += length-1;
                 }
                 else
                 {
-                    Old = work.substr(i, 1);
+                    from = work.substr(i, 1);
                     value = (int)((unsigned char)work[i]);
                 }
 
-                std::string New{"&#" + std::to_string(value) + ";"};
-                replace(buffer, Old, New.c_str());
+                std::string to{"&#" + std::to_string(value) + ";"};
+                replace(buffer, from, to.c_str());
 
-                Found = true;
+                found = true;
             }
         }
-    } while (Found == true);
+    } while (found == true);
 }
 
 /**
