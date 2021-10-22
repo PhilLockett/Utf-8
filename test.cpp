@@ -270,6 +270,13 @@ NEXT_CASE(test43, "useCharacterRefs - Test 1, 2, 3 & 4 byte count UTF-8 string."
     const unsigned char string4[]{ 0x41, 0x20, 0xC2, 0xA9, 0x20, 0xE2, 0xAD, 0xA1, 0x20, 0xF0, 0x9F, 0x83, 0x93, 0 };
     REQUIRE(useCharacterRefs(std::string((char *)string4)).compare(expected2) == 0)
 
+NEXT_CASE(test44, "useCharacterRefs - Test 4, 3, 2 & 1 byte count UTF-8 string.")
+
+    std::string expected3{"&#127187; &#11105; &#169; A"};
+
+    const unsigned char string5[]{ 0xF0, 0x9F, 0x83, 0x93, 0x20, 0xE2, 0xAD, 0xA1, 0x20, 0xC2, 0xA9, 0x20, 0x41, 0 };
+    REQUIRE(useCharacterRefs(std::string((char *)string5)).compare(expected3) == 0)
+
 END_TEST
 
 
