@@ -206,7 +206,7 @@ bool utf8ToUnicode(const std::string & buffer, int & unicode, int & length)
  * @param from current char sequence.
  * @param to replacement char sequence.
  */
-static void replace(std::string & buffer, std::string_view & from, const char * to)
+static void replace(std::string & buffer, std::string_view & from, std::string & to)
 {
     if (from.compare(to) == 0)
         return;
@@ -251,7 +251,7 @@ void useCharacterRefs(std::string & buffer)
                 }
 
                 std::string to{"&#" + std::to_string(value) + ";"};
-                replace(buffer, from, to.c_str());
+                replace(buffer, from, to);
 
                 found = true;
             }
