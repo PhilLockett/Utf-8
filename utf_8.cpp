@@ -22,7 +22,6 @@
  */
 
 #include <cstring>
-#include <string_view>
 
 #include "utf_8.h"
 
@@ -152,13 +151,14 @@ bool isValidUtf8(const std::string & buffer, size_t len)
 }
 
 /**
- * @brief Get the unicode value from a string containing a UTF-8 character.
+ * @brief Get the unicode value from a string containing a valid UTF-8
+ * character.
  * 
- * @param buffer string containing the UTF-8 character.
+ * @param buffer string containing the valid UTF-8 character.
  * @param unicode returned value decoded from the UTF-8 character in buffer.
  * @param length returned UTF-8 byte count.
  * @return true if buffer contains a valid UTF-8 character.
- * @return false otherwise.
+ * @return false otherwise (unicode and length are unmodified).
  */
 bool utf8ToUnicode(const std::string & buffer, int & unicode, int & length)
 {
@@ -199,24 +199,6 @@ bool utf8ToUnicode(const std::string & buffer, int & unicode, int & length)
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * @brief Replaces all occurences of a char sequence with a new char sequence
- * in a std::string.
- * 
- * @param buffer to be updated.
- * @param from current char sequence.
- * @param to replacement char sequence.
- */
-static void replace(std::string & buffer, std::string_view & from, std::string & to)
-{
-    if (from.compare(to) == 0)
-        return;
-
-    const size_t length{from.length()};
-    for (auto pos{buffer.find(from)}; pos != std::string::npos; pos = buffer.find(from, pos+1))
-        buffer.replace(pos, length, to);
-}
-
-/**
  * @brief Replace ISO/IEC 8859-1 & UTF-8 characters in a given string with the
  * corresponding character references necessary for HTML & XML compatibility.
  * 
@@ -225,33 +207,27 @@ static void replace(std::string & buffer, std::string_view & from, std::string &
 void useCharacterRefs(std::string & buffer)
 {
     bool found{};
+    size_t i{};
 
     do
     {
-        std::string_view work{buffer};
         found = false;
 
-        for (int i = 0; i < work.length() && !found; i++)
+        for (; i < buffer.length() && !found; i++)
         {
-            if (work[i] < 32)
+            if (buffer[i] < 32)
             {
-                std::string_view from{};
+                const size_t pos{i};
 
                 int value{};
-                int length{};
+                int length{1};
                 if (utf8ToUnicode(buffer.substr(i), value, length))
-                {
-                    from = work.substr(i, length);
                     i += length-1;
-                }
                 else
-                {
-                    from = work.substr(i, 1);
-                    value = (int)((unsigned char)work[i]);
-                }
+                    value = (int)((unsigned char)buffer[i]);
 
                 std::string to{"&#" + std::to_string(value) + ";"};
-                replace(buffer, from, to);
+                buffer.replace(pos, length, to);
 
                 found = true;
             }
