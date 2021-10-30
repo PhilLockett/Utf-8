@@ -80,7 +80,7 @@ std::string unicodeToUtf8(int unicode)
 {
     char buffer[5]{};
 
-    // Get UTF-8 length and set first byte thanks to getUtf8Length().
+    // Get UTF-8 length and set first byte with getUtf8Length().
     const size_t len{getUtf8Length(unicode, buffer[0])};
 
     if (!len)
@@ -88,10 +88,10 @@ std::string unicodeToUtf8(int unicode)
 
     // Set remaining bytes.
     size_t shift{6 * (len - 1)};
-    for (int i = 1; i < len; ++i)
+    for (int i{1}; i < len; ++i)
     {
         shift -= 6;
-        int value{(unicode >> shift) & 0x3F};
+        const int value{(unicode >> shift) & 0x3F};
         buffer[i] = 0x80 + value;
     }
 
@@ -178,7 +178,7 @@ bool utf8ToUnicode(const std::string & buffer, int & unicode, int & length)
     case 4: unicode = buffer[0] & 0x07; break;
     }
 
-    for (int i = 1; i < len; ++i)
+    for (int i{1}; i < len; ++i)
     {
         unicode <<= 6;
         unicode |= (buffer[i] & 0x3F);
@@ -186,7 +186,7 @@ bool utf8ToUnicode(const std::string & buffer, int & unicode, int & length)
 
     // Check for Overlong.
     char lead{};
-    size_t checkLen{getUtf8Length(unicode, lead)};
+    const size_t checkLen{getUtf8Length(unicode, lead)};
     if (checkLen != len)
         return false;
 
