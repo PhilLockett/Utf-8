@@ -9,7 +9,7 @@ This small library provides functions to convert between UTF-8 and unicode.
 ### unicodeToUtf8()
 
 Takes a `unicode` value and returns the equivalent UTF-8 character as a 
-std::string.
+string.
 
     std::string unicodeToUtf8(int unicode);
 
@@ -31,8 +31,9 @@ versions are available, the first modifies the original string referenced, the
 second returns a new string with the modifications, leaving the original string
 unchanged.
 
-    void useCharacterRefs(std::string & buffer)
-    std::string useCharacterRefs(const std::string & buffer)
+    void useCharacterRefs(std::string & buffer);
+
+    std::string useCharacterRefs(const std::string & buffer);
 
 ## Cloning and Running
 
