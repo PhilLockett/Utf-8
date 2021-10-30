@@ -206,33 +206,23 @@ bool utf8ToUnicode(const std::string & buffer, int & unicode, int & length)
  */
 void useCharacterRefs(std::string & buffer)
 {
-    bool found{};
-    size_t i{};
-
-    do
+    for (size_t i{}; i < buffer.length(); i++)
     {
-        found = false;
-
-        for (; i < buffer.length() && !found; i++)
+        if (buffer[i] < 32)
         {
-            if (buffer[i] < 32)
-            {
-                const size_t pos{i};
+            const size_t pos{i};
 
-                int value{};
-                int length{1};
-                if (utf8ToUnicode(buffer.substr(i), value, length))
-                    i += length-1;
-                else
-                    value = (int)((unsigned char)buffer[i]);
+            int value{};
+            int length{1};
+            if (utf8ToUnicode(buffer.substr(i), value, length))
+                i += length-1;
+            else
+                value = (unsigned char)buffer[i];
 
-                std::string to{"&#" + std::to_string(value) + ";"};
-                buffer.replace(pos, length, to);
-
-                found = true;
-            }
+            std::string to{"&#" + std::to_string(value) + ";"};
+            buffer.replace(pos, length, to);
         }
-    } while (found == true);
+    }
 }
 
 /**
