@@ -18,9 +18,21 @@ std::string.
 Takes a string containing a UTF-8 character and extracts the unicode value it
 contains. The function returns true if `buffer` contains a valid UTF-8 
 character, or false otherwise. If valid, `unicode` is set to the decoded UTF-8
-character and `length` is set to the UTF-8 byte count.
+character and `length` is set to the UTF-8 byte count. If not valid, `unicode`
+and `length` are both unchanged.
 
     bool utf8ToUnicode(const std::string & buffer, int & unicode, int & length);
+
+### useCharacterRefs()
+
+Replaces ISO/IEC 8859-1 & UTF-8 characters in a given string with the
+corresponding character references necessary for HTML & XML compatibility. Two
+versions are available, the first modifies the original string referenced, the
+second returns a new string with the modifications, leaving the original string
+unchanged.
+
+    void useCharacterRefs(std::string & buffer)
+    std::string useCharacterRefs(const std::string & buffer)
 
 ## Cloning and Running
 
