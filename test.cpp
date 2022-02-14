@@ -33,6 +33,7 @@
  */
 
 #include <iostream>
+#include <algorithm>
 
 #include "unittest.h"
 #include "utf_8.h"
@@ -40,12 +41,31 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-const char AData[2]{ 0x41, 0 };
-const char zData[2]{ 0x7A, 0 };
-const char copyrightData[3]{ (char)0xC2, (char)0xA9, 0 };
-const char umlautData[3]{ (char)0xC3, (char)0xB6, 0 };
-const char upArrowData[4]{ (char)0xE2, (char)0xAD, (char)0xA1, 0 };
-const char clubs3Data[5]{ (char)0xF0, (char)0x9F, (char)0x83, (char)0x93, 0 };
+// UTF-8 strings.
+constexpr char AData[2]{ 0x41, 0 };
+constexpr char zData[2]{ 0x7A, 0 };
+constexpr char copyrightData[3]{ (char)0xC2, (char)0xA9, 0 };
+constexpr char umlautData[3]{ (char)0xC3, (char)0xB6, 0 };
+constexpr char upArrowData[4]{ (char)0xE2, (char)0xAD, (char)0xA1, 0 };
+constexpr char clubs3Data[5]{ (char)0xF0, (char)0x9F, (char)0x83, (char)0x93, 0 };
+
+// UTF-8 default vectors.
+const std::vector<char>nullVector{};
+const std::vector<char>AVector{ 0x41 };
+const std::vector<char>zVector{ 0x7A };
+const std::vector<char>copyrightVector{ (char)0xC2, (char)0xA9 };
+const std::vector<char>umlautVector{ (char)0xC3, (char)0xB6 };
+const std::vector<char>upArrowVector{ (char)0xE2, (char)0xAD, (char)0xA1 };
+const std::vector<char>clubs3Vector{ (char)0xF0, (char)0x9F, (char)0x83, (char)0x93 };
+
+// UTF-8 int vectors.
+const std::vector<int>nullIntVector{};
+const std::vector<int>AIntVector{ 0x41 };
+const std::vector<int>zIntVector{ 0x7A };
+const std::vector<int>copyrightIntVector{ 0xC2, 0xA9 };
+const std::vector<int>umlautIntVector{ 0xC3, 0xB6 };
+const std::vector<int>upArrowIntVector{ 0xE2, 0xAD, 0xA1 };
+const std::vector<int>clubs3IntVector{ 0xF0, 0x9F, 0x83, 0x93 };
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -280,6 +300,92 @@ NEXT_CASE(test44, "useCharacterRefs - Test 4, 3, 2 & 1 byte count UTF-8 string."
 END_TEST
 
 
+/**
+ * @section 50 - unicodeToUtf8Vector translation test.
+ */
+UNIT_TEST(test50, "unicodeToUtf8Vector - Test null character.")
+
+    std::vector<char> calculated{};
+
+    calculated = unicodeToUtf8Vector(0);
+    REQUIRE(std::equal(nullVector.begin(), nullVector.end(), calculated.begin()) == true)
+
+NEXT_CASE(test51, "unicodeToUtf8Vector - Test 'A' character.")
+
+    calculated = unicodeToUtf8Vector(0x41);
+    REQUIRE(std::equal(AVector.begin(), AVector.end(), calculated.begin()) == true)
+
+NEXT_CASE(test52, "unicodeToUtf8Vector - Test 'z' character.")
+
+    calculated = unicodeToUtf8Vector(0x7A);
+    REQUIRE(std::equal(zVector.begin(), zVector.end(), calculated.begin()) == true)
+
+NEXT_CASE(test53, "unicodeToUtf8Vector - Test copyright character.")
+
+    calculated = unicodeToUtf8Vector(0xA9);
+    REQUIRE(std::equal(copyrightVector.begin(), copyrightVector.end(), calculated.begin()) == true)
+
+NEXT_CASE(test54, "unicodeToUtf8Vector - Test o umlaut character.")
+
+    calculated = unicodeToUtf8Vector(0xF6);
+    REQUIRE(std::equal(umlautVector.begin(), umlautVector.end(), calculated.begin()) == true)
+
+NEXT_CASE(test55, "unicodeToUtf8Vector - Test upwards triangle headed arrow character.")
+
+    calculated = unicodeToUtf8Vector(0x2B61);
+    REQUIRE(std::equal(upArrowVector.begin(), upArrowVector.end(), calculated.begin()) == true)
+
+NEXT_CASE(test56, "unicodeToUtf8Vector - Test 3 of clubs character.")
+
+    calculated = unicodeToUtf8Vector(0x1F0D3);
+    REQUIRE(std::equal(clubs3Vector.begin(), clubs3Vector.end(), calculated.begin()) == true)
+
+END_TEST
+
+
+/**
+ * @section 60 - unicodeToUtf8Vector<int> translation test.
+ */
+UNIT_TEST(test60, "unicodeToUtf8Vector<int> - Test null character.")
+
+    std::vector<int> calculated{};
+
+    calculated = unicodeToUtf8Vector<int>(0);
+    REQUIRE(std::equal(nullIntVector.begin(), nullIntVector.end(), calculated.begin()) == true)
+
+NEXT_CASE(test51, "unicodeToUtf8Vector<int> - Test 'A' character.")
+
+    calculated = unicodeToUtf8Vector<int>(0x41);
+    REQUIRE(std::equal(AIntVector.begin(), AIntVector.end(), calculated.begin()) == true)
+
+NEXT_CASE(test52, "unicodeToUtf8Vector<int> - Test 'z' character.")
+
+    calculated = unicodeToUtf8Vector<int>(0x7A);
+    REQUIRE(std::equal(zIntVector.begin(), zIntVector.end(), calculated.begin()) == true)
+
+NEXT_CASE(test53, "unicodeToUtf8Vector<int> - Test copyright character.")
+
+    calculated = unicodeToUtf8Vector<int>(0xA9);
+    REQUIRE(std::equal(copyrightIntVector.begin(), copyrightIntVector.end(), calculated.begin()) == true)
+
+NEXT_CASE(test54, "unicodeToUtf8Vector<int> - Test o umlaut character.")
+
+    calculated = unicodeToUtf8Vector<int>(0xF6);
+    REQUIRE(std::equal(umlautIntVector.begin(), umlautIntVector.end(), calculated.begin()) == true)
+
+NEXT_CASE(test55, "unicodeToUtf8Vector<int> - Test upwards triangle headed arrow character.")
+
+    calculated = unicodeToUtf8Vector<int>(0x2B61);
+    REQUIRE(std::equal(upArrowIntVector.begin(), upArrowIntVector.end(), calculated.begin()) == true)
+
+NEXT_CASE(test56, "unicodeToUtf8Vector<int> - Test 3 of clubs character.")
+
+    calculated = unicodeToUtf8Vector<int>(0x1F0D3);
+    REQUIRE(std::equal(clubs3IntVector.begin(), clubs3IntVector.end(), calculated.begin()) == true)
+
+END_TEST
+
+
 ///////////////////////////////////////////////////////////////////////////////
 
 int runTests(void)
@@ -291,6 +397,8 @@ int runTests(void)
     RUN_TEST(test20)
     RUN_TEST(test30)
     RUN_TEST(test40)
+    RUN_TEST(test50)
+    RUN_TEST(test60)
 
     const int err = FINISHED;
     if (err)
