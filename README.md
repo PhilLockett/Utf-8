@@ -35,6 +35,14 @@ unchanged.
 
     std::string useCharacterRefs(const std::string & buffer);
 
+### unicodeToUtf8Vector()
+
+Takes a `unicode` value and returns the equivalent UTF-8 character as a 
+vector. The default type of the vector is `char`.
+
+    template<typename T = char>
+    std::vector<T> unicodeToUtf8Vector(int unicode);
+
 ## Cloning and Running
 
 The test code is dependent on UnitTest. To compile and run the UTF-8 test code
