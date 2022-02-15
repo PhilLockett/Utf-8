@@ -45,6 +45,7 @@ vector. The default type of the vector is `char`.
 
 ## Cloning and Running
 
+### Test Code
 The test code is dependent on UnitTest. To compile and run the UTF-8 test code
 you first need to clone the unit test code, then copy unittest.cpp and 
 unittest.h into the UTF-8 directory before executing make. To clone the unit
@@ -61,6 +62,13 @@ following unix/linux commands:
     cp ../UnitTest/unittest.h .
     make
     ./test
+
+### Utility Code
+The utility code can be built and run using the followig for an example:
+
+    make genutf8
+    ./genutf8 0 0x41 0x7A 0xA9 0xF6 0x2B61 0x1F0D3
+
 
 ## Points of interest
 
