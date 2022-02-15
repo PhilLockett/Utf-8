@@ -353,32 +353,32 @@ UNIT_TEST(test60, "unicodeToUtf8Vector<int> - Test null character.")
     calculated = unicodeToUtf8Vector<int>(0);
     REQUIRE(std::equal(nullIntVector.begin(), nullIntVector.end(), calculated.begin()) == true)
 
-NEXT_CASE(test51, "unicodeToUtf8Vector<int> - Test 'A' character.")
+NEXT_CASE(test61, "unicodeToUtf8Vector<int> - Test 'A' character.")
 
     calculated = unicodeToUtf8Vector<int>(0x41);
     REQUIRE(std::equal(AIntVector.begin(), AIntVector.end(), calculated.begin()) == true)
 
-NEXT_CASE(test52, "unicodeToUtf8Vector<int> - Test 'z' character.")
+NEXT_CASE(test62, "unicodeToUtf8Vector<int> - Test 'z' character.")
 
     calculated = unicodeToUtf8Vector<int>(0x7A);
     REQUIRE(std::equal(zIntVector.begin(), zIntVector.end(), calculated.begin()) == true)
 
-NEXT_CASE(test53, "unicodeToUtf8Vector<int> - Test copyright character.")
+NEXT_CASE(test63, "unicodeToUtf8Vector<int> - Test copyright character.")
 
     calculated = unicodeToUtf8Vector<int>(0xA9);
     REQUIRE(std::equal(copyrightIntVector.begin(), copyrightIntVector.end(), calculated.begin()) == true)
 
-NEXT_CASE(test54, "unicodeToUtf8Vector<int> - Test o umlaut character.")
+NEXT_CASE(test64, "unicodeToUtf8Vector<int> - Test o umlaut character.")
 
     calculated = unicodeToUtf8Vector<int>(0xF6);
     REQUIRE(std::equal(umlautIntVector.begin(), umlautIntVector.end(), calculated.begin()) == true)
 
-NEXT_CASE(test55, "unicodeToUtf8Vector<int> - Test upwards triangle headed arrow character.")
+NEXT_CASE(test65, "unicodeToUtf8Vector<int> - Test upwards triangle headed arrow character.")
 
     calculated = unicodeToUtf8Vector<int>(0x2B61);
     REQUIRE(std::equal(upArrowIntVector.begin(), upArrowIntVector.end(), calculated.begin()) == true)
 
-NEXT_CASE(test56, "unicodeToUtf8Vector<int> - Test 3 of clubs character.")
+NEXT_CASE(test66, "unicodeToUtf8Vector<int> - Test 3 of clubs character.")
 
     calculated = unicodeToUtf8Vector<int>(0x1F0D3);
     REQUIRE(std::equal(clubs3IntVector.begin(), clubs3IntVector.end(), calculated.begin()) == true)
