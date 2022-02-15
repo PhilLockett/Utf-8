@@ -64,7 +64,7 @@ following unix/linux commands:
     ./test
 
 ### Utility Code
-The utility code can be built and run using the followig for an example:
+The utility code can be built and run using the following for an example:
 
     make genutf8
     ./genutf8 0 0x41 0x7A 0xA9 0xF6 0x2B61 0x1F0D3
