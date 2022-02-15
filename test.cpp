@@ -24,12 +24,11 @@
  *    g++ -std=c++20 -c -o test.o test.cpp
  *    g++ -std=c++20 -c -o unittest.o unittest.cpp
  *    g++ -std=c++20 -c -o utf_8.o utf_8.cpp
- *    g++ -std=c++20 -o test test.o unittest.o
+ *    g++ -std=c++20 -o test test.o unittest.o utf_8.o
  *
  * Test using:
  *    ./test
  *
- *  Should generate 1 error.
  */
 
 #include <iostream>
@@ -410,7 +409,7 @@ int runTests(void)
 }
 
 /**
- * Test system entry point.
+ * Test-system entry point.
  *
  * @param  argc - command line argument count.
  * @param  argv - command line argument vector.
