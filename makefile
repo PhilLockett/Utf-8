@@ -14,6 +14,11 @@ test:	$(objects)	$(headers)
 %.o:	%.cpp	$(headers)
 	g++ $(options) -c -o $@ $<
 
+genutf8:	genutf8.cpp	utf_8.cpp
+	g++ -std=c++20 -c -o genutf8.o genutf8.cpp
+	g++ -std=c++20 -c -o utf_8.o utf_8.cpp
+	g++ -std=c++20 -o genutf8 genutf8.o utf_8.o
+
 format:
 	tfc -s -u -r test.cpp
 	tfc -s -u -r unittest.cpp
