@@ -399,11 +399,8 @@ int runTests(void)
     RUN_TEST(test50)
     RUN_TEST(test60)
 
-    const int err = FINISHED;
-    if (err)
-        std::cerr << err << " ERROR(S) encountered!.\n";
-    else
-        std::cout << "All tests passed.\n";
+    const int err{FINISHED};
+    OUTPUT_SUMMARY;
 
     return err;
 }
