@@ -167,7 +167,7 @@ bool utf8ToUnicode(const std::string & buffer, int & unicode, int & length)
     if (len < 1 || len > 4)
         return false;
 
-    if (!isValidUtf8(buffer.c_str(), len))
+    if (!isValidUtf8(buffer, len))
         return false;
 
     switch (len)
