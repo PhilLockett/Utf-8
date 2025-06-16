@@ -35,32 +35,38 @@
  * @param unicode value to encode as UTF-8.
  * @param lead byte set up to indicate length and contains most sig bits.
  * @return size_t number of bytes necessary to encode unicode value as UTF-8.
+ *         0 indicates unicode is invalid.
  */
 size_t getUtf8Length(int unicode, char & lead)
 {
     // Determine the number of bytes necessary and set the first byte.
-    if ((unicode >= 0) && (unicode <= 0x7F))
+    if (unicode < 0)
+    {
+        return 0;
+    }
+
+    if (unicode <= 0x7F)
     {
         lead = (char)unicode;
 
         return 1;
     }
 
-    if ((unicode >= 0x80) && (unicode <= 0x07FF))
+    if (unicode <= 0x07FF)
     {
         lead = (char)(0xC0 + ((unicode >> 6) & 0x1F));
 
         return 2;
     }
 
-    if ((unicode >= 0x0800) && (unicode <= 0xFFFF))
+    if (unicode <= 0xFFFF)
     {
         lead = (char)(0xE0 + ((unicode >> 12) & 0x0F));
 
         return 3;
     }
 
-    if ((unicode >= 0x10000) && (unicode <= 0x10FFFF))
+    if (unicode <= 0x10FFFF)
     {
         lead = (char)(0xF0 + ((unicode >> 18) & 0x07));
 
