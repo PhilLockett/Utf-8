@@ -31,10 +31,15 @@ namespace utf8 {
 
 extern size_t getUtf8Length(int unicode, char & lead);
 extern std::string unicodeToUtf8(int unicode);
-extern bool utf8ToUnicode(const std::string & buffer, int & unicode, int & length);
+extern bool utf8ToUnicode(const std::string_view & buffer, int & unicode, int & length);
 
 extern void useCharacterRefs(std::string & buffer);
 extern std::string useCharacterRefs(const std::string & buffer);
+
+extern int toUpper(std::string & buffer);
+extern int toLower(std::string & buffer);
+extern void makeUpper(std::string & buffer);
+extern void makeLower(std::string & buffer);
 
 
 /**

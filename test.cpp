@@ -300,7 +300,7 @@ END_TEST
 
 
 /**
- * @section 50 - unicodeToUtf8Vector translation test.
+ * @section 5 - unicodeToUtf8Vector translation test.
  */
 UNIT_TEST(test50, "unicodeToUtf8Vector - Test null character.")
 
@@ -343,7 +343,7 @@ END_TEST
 
 
 /**
- * @section 60 - unicodeToUtf8Vector<int> translation test.
+ * @section 6 - unicodeToUtf8Vector<int> translation test.
  */
 UNIT_TEST(test60, "unicodeToUtf8Vector<int> - Test null character.")
 
@@ -385,6 +385,145 @@ NEXT_CASE(test66, "unicodeToUtf8Vector<int> - Test 3 of clubs character.")
 END_TEST
 
 
+/**
+ * @section 7 - Utf8 case conversion test.
+ */
+UNIT_TEST(test70, "makeUpper - Test ASCII only.")
+
+    std::string input{};
+    std::string expected{};
+    std::string result{};
+
+    input = "Hello World!";
+    expected = "HELLO WORLD!";
+
+    result = input;
+    utf8::makeUpper(result);
+    REQUIRE(expected.compare(result) == 0)
+
+NEXT_CASE(test71, "makeLower - Test ASCII only.")
+
+    expected = "hello world!";
+
+    result = input;
+    utf8::makeLower(result);
+    REQUIRE(expected.compare(result) == 0)
+
+NEXT_CASE(test72, "makeUpper - Test ASCII & UTF-8.")
+
+    input = "Garçon";
+    expected = "GARÇON";
+
+    result = input;
+    utf8::makeUpper(result);
+    REQUIRE(expected.compare(result) == 0)
+
+NEXT_CASE(test73, "makeLower - Test ASCII & UTF-8 (no UTF-8 change).")
+
+    expected = "garçon";
+
+    result = input;
+    utf8::makeLower(result);
+    REQUIRE(expected.compare(result) == 0)
+
+NEXT_CASE(test74, "makeUpper - Test ASCII & UTF-8 (no UTF-8 change).")
+
+    input = "Élan";
+    expected = "ÉLAN";
+
+    result = input;
+    utf8::makeUpper(result);
+    REQUIRE(expected.compare(result) == 0)
+
+NEXT_CASE(test75, "makeLower - Test ASCII & UTF-8.")
+
+    expected = "élan";
+
+    result = input;
+    utf8::makeLower(result);
+    REQUIRE(expected.compare(result) == 0)
+
+END_TEST
+
+
+/**
+ * @section 8 - single (first) character Utf8 case conversion test.
+ */
+UNIT_TEST(test80, "toUpper - Test ASCII (no change).")
+
+    std::string input{};
+    std::string expected{};
+    std::string result{};
+
+    input = "Hello World!";
+    expected = "Hello World!";
+
+    result = input;
+    utf8::toUpper(result);
+    REQUIRE(expected.compare(result) == 0)
+
+NEXT_CASE(test81, "toLower - Test ASCII.")
+
+    expected = "hello World!";
+
+    result = input;
+    utf8::toLower(result);
+    REQUIRE(expected.compare(result) == 0)
+
+NEXT_CASE(test82, "toUpper - Test ASCII (no change).")
+
+    input = "Garçon";
+    expected = "Garçon";
+
+    result = input;
+    utf8::toUpper(result);
+    REQUIRE(expected.compare(result) == 0)
+
+NEXT_CASE(test83, "toLower - Test ASCII.")
+
+    expected = "garçon";
+
+    result = input;
+    utf8::toLower(result);
+    REQUIRE(expected.compare(result) == 0)
+
+NEXT_CASE(test84, "toUpper - Test UTF-8 (no change).")
+
+    input = "Élan";
+    expected = "Élan";
+
+    result = input;
+    utf8::toUpper(result);
+    REQUIRE(expected.compare(result) == 0)
+
+NEXT_CASE(test85, "toLower - Test UTF-8.")
+
+    expected = "élan";
+
+    result = input;
+    utf8::toLower(result);
+    REQUIRE(expected.compare(result) == 0)
+
+NEXT_CASE(test86, "toUpper - Test UTF-8.")
+
+    input = "élan";
+    expected = "Élan";
+
+    result = input;
+    utf8::toUpper(result);
+    REQUIRE(expected.compare(result) == 0)
+
+NEXT_CASE(test87, "toLower - Test UTF-8 (no change).")
+
+    expected = "élan";
+
+    result = input;
+    utf8::toLower(result);
+    REQUIRE(expected.compare(result) == 0)
+
+END_TEST
+
+
 ///////////////////////////////////////////////////////////////////////////////
 
 int runTests(void)
@@ -398,6 +537,8 @@ int runTests(void)
     RUN_TEST(test40)
     RUN_TEST(test50)
     RUN_TEST(test60)
+    RUN_TEST(test70)
+    RUN_TEST(test80)
 
     const int err{FINISHED};
     OUTPUT_SUMMARY;

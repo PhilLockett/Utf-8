@@ -22,12 +22,15 @@
  */
 
 #include <cstring>
+#include <string_view>
 
 #include "utf_8.h"
 
 namespace utf8 {
 
+
 ///////////////////////////////////////////////////////////////////////////////
+// Unicode to UTF-8.
 
 /**
  * @brief Determine the number of bytes necessary to encode unicode value as
@@ -107,6 +110,7 @@ std::string unicodeToUtf8(int unicode)
 
 
 ///////////////////////////////////////////////////////////////////////////////
+// UTF-8 to Unicode.
 
 /**
  * @brief Determine the UTF-8 byte count from the string buffer.
@@ -114,7 +118,7 @@ std::string unicodeToUtf8(int unicode)
  * @param buffer string containing the UTF-8 character.
  * @return size_t the UTF-8 byte count.
  */
-size_t numUtf8Bytes(const std::string & buffer)
+size_t numUtf8Bytes(const std::string_view & buffer)
 {
     if ((buffer[0] & 0x80) == 0x0)
         return 1;
@@ -138,10 +142,9 @@ size_t numUtf8Bytes(const std::string & buffer)
  * 
  * @param buffer string containing the UTF-8 character.
  * @param len the UTF-8 byte count.
- * @return true if buffer contains a valid UTF-8 character.
- * @return false otherwise.
+ * @return true if buffer contains a valid UTF-8 character, false otherwise.
  */
-bool isValidUtf8(const std::string & buffer, size_t len)
+bool isValidUtf8(const std::string_view & buffer, size_t len)
 {
     if (len > buffer.length())
         return false;
@@ -167,7 +170,7 @@ bool isValidUtf8(const std::string & buffer, size_t len)
  * @return true if buffer contains a valid UTF-8 character.
  * @return false otherwise (unicode and length are unmodified).
  */
-bool utf8ToUnicode(const std::string & buffer, int & unicode, int & length)
+bool utf8ToUnicode(const std::string_view & buffer, int & unicode, int & length)
 {
     const size_t len{numUtf8Bytes(buffer)};
 
@@ -204,6 +207,7 @@ bool utf8ToUnicode(const std::string & buffer, int & unicode, int & length)
 
 
 ///////////////////////////////////////////////////////////////////////////////
+// Unicode and/or UTF-8 to HTML.
 
 /**
  * @brief Replace ISO/IEC 8859-1 & UTF-8 characters in a given string with the
@@ -213,6 +217,7 @@ bool utf8ToUnicode(const std::string & buffer, int & unicode, int & length)
  */
 void useCharacterRefs(std::string & buffer)
 {
+    // Note buffer length changes here.
     for (size_t i{}; i < buffer.length(); i++)
     {
         if (buffer[i] < 32)
@@ -248,6 +253,202 @@ std::string useCharacterRefs(const std::string & buffer)
     return work;
 }
 
-}   // end namespace
 
 ///////////////////////////////////////////////////////////////////////////////
+// Change for a UTF-8 string.
+
+/**
+ * @brief Check if the given string starts with an uppercase character.
+ * 
+ * @param buffer possibly starting with an ASCII or UTF-8 character.
+ * @return int 1 if uppercase ASCII, 2 if 2-byte uppercase UTF-8, 0 otherwise.
+ */
+int isUpper(const std::string_view & buffer)
+{
+    const unsigned char *cp((const unsigned char *)&buffer[0]);
+
+    // Check uppercase ASCII.
+    if ((*cp > 0x40) && (*cp < 0x5B))
+        return 1;
+
+    // Check not a 2-byte UTF-8 char.
+    if (*cp != 0xC3)
+        return 0;
+
+    // Next byte.
+    ++cp;
+
+    // Is the symbol?
+    if (*cp == 0x97)
+        return 0;
+
+    // Check 2-byte uppercase UTF-8 char.
+    if ((*cp > 0x7F) && (*cp < 0x9F))
+        return 2;
+
+    return 0;
+}
+
+/**
+ * @brief Check if the given string starts with a lowercase character.
+ * 
+ * @param buffer possibly starting with an ASCII or UTF-8 character.
+ * @return int 1 if lowercase ASCII, 2 if 2-byte lowercase UTF-8, 0 otherwise.
+ */
+int isLower(const std::string_view & buffer)
+{
+    const unsigned char *cp((const unsigned char *)&buffer[0]);
+    // Check lowercase ASCII.
+    if ((*cp > 0x60) && (*cp < 0x7B))
+        return 1;
+
+    // Check not a 2-byte UTF-8 char.
+    if (*cp != 0xC3)
+        return 0;
+
+    // Next byte.
+    ++cp;
+
+    // Is the symbol?
+    if (*cp == 0xB7)
+        return 0;
+
+    // Check 2-byte lowercase UTF-8 char.
+    if ((*cp > 0x9F) && (*cp < 0xBF))
+        return 2;
+
+    return 0;
+}
+
+/**
+ * @brief Convert a lowercase character to uppercase at the start of string.
+ * 
+ * @param buffer possibly starting with an ASCII or UTF-8 lowercase character.
+ * @return int 1 if uppercase ASCII, 2 if 2-byte uppercase UTF-8, 0 otherwise.
+ */
+int toUpper(std::string & buffer)
+{
+    const int lower{isLower(buffer)};
+    if (lower == 0)
+    {
+        return 0;
+    }
+
+    unsigned char *cp((unsigned char *)buffer.c_str());
+
+    // Move to next byte for UTF-8.
+    if (lower == 2)
+    {
+        ++cp;
+    }
+
+    // Flip case.
+    *cp ^= 0x20;
+
+    return lower;
+}
+
+/**
+ * @brief Convert a uppercase character to lowercase at the start of string.
+ * 
+ * @param buffer possibly starting with an ASCII or UTF-8  uppercase character.
+ * @return int 1 if lowercase ASCII, 2 if 2-byte lowercase UTF-8, 0 otherwise.
+ */
+int toLower(std::string & buffer)
+{
+    const int upper{isUpper(buffer)};
+    if (upper == 0)
+    {
+        return 0;
+    }
+
+    unsigned char *cp((unsigned char *)buffer.c_str());
+
+    // Move to next byte for UTF-8.
+    if (upper == 2)
+    {
+        ++cp;
+    }
+
+    // Flip case.
+    *cp ^= 0x20;
+
+    return upper;
+}
+
+/**
+ * @brief Convert lowercase characters to uppercase in the given string.
+ * 
+ * @param buffer possibly containing ASCII or UTF-8 lowercase characters.
+ */
+void makeUpper(std::string & buffer)
+{
+    const std::string_view view{buffer};
+
+    const auto length{buffer.length()};
+    for (size_t i{}; i < length; i++)
+    {
+        auto lead{view.substr(i)};
+        const int lower{isLower(lead)};
+        
+        if (lower == 0)
+        {
+            // Skip over any UTF-8 bytes.
+            auto bytes{numUtf8Bytes(lead)};
+            if (bytes)
+            {
+                i += bytes-1;
+            }
+            continue;
+        }
+
+        // Skip to next byte for UTF-8.
+        if (lower == 2)
+        {
+            ++i;
+        }
+
+        // Flip case.
+        buffer[i] ^= 0x20;
+    }
+}
+
+/**
+ * @brief Convert uppercase characters to lowercase in the given string.
+ * 
+ * @param buffer possibly containing ASCII or UTF-8 uppercase characters.
+ */
+void makeLower(std::string & buffer)
+{
+    const std::string_view view{buffer};
+
+    const auto length{buffer.length()};
+    for (size_t i{}; i < length; i++)
+    {
+        auto lead{view.substr(i)};
+        const int upper{isUpper(lead)};
+        
+        if (upper == 0)
+        {
+            // Skip over any UTF-8 bytes.
+            auto bytes{numUtf8Bytes(lead)};
+            if (bytes)
+            {
+                i += bytes-1;
+            }
+            continue;
+        }
+
+        // Skip to next byte for UTF-8.
+        if (upper == 2)
+        {
+            ++i;
+        }
+
+        // Flip case.
+        buffer[i] ^= 0x20;
+    }
+}
+
+
+}   // end namespace
