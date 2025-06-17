@@ -46,7 +46,7 @@
  */
 void dumpUtf8(int unicode)
 {
-    std::vector<int> output{unicodeToUtf8Vector<int>(unicode)};
+    std::vector<int> output{utf8::unicodeToUtf8Vector<int>(unicode)};
 
     std::cout << "0x" << std::hex << unicode << std::dec << " ("<< unicode << ")\t= " << std::hex;
 

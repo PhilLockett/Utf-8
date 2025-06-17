@@ -27,6 +27,7 @@
 #include <string>
 #include <vector>
 
+namespace utf8 {
 
 extern size_t getUtf8Length(int unicode, char & lead);
 extern std::string unicodeToUtf8(int unicode);
@@ -68,5 +69,7 @@ std::vector<T> unicodeToUtf8Vector(int unicode)
 
     return output;
 }
+
+}   // end namespace
 
 #endif // !defined(_UTF_8_H__20211017_1938__INCLUDED_)
