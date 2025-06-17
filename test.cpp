@@ -66,6 +66,10 @@ const std::vector<int>umlautIntVector{ 0xC3, 0xB6 };
 const std::vector<int>upArrowIntVector{ 0xE2, 0xAD, 0xA1 };
 const std::vector<int>clubs3IntVector{ 0xF0, 0x9F, 0x83, 0x93 };
 
+// Multi character UTF-8 strings.
+const std::string asciiOnly{"Hello World!"};
+const std::string asciiUtf8{"Hello © ö ⭡ 🃓"};
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -524,6 +528,22 @@ NEXT_CASE(test87, "toLower - Test UTF-8 (no change).")
 END_TEST
 
 
+/**
+ * @section 9 - Utf8 character count test.
+ */
+UNIT_TEST(test90, "charCount - Test ASCII only.")
+
+    REQUIRE(utf8::charCount(asciiOnly) == 12)
+    REQUIRE(asciiOnly.length() == 12)
+
+NEXT_CASE(test91, "charCount - Test ASCII & UTF-8.")
+
+    REQUIRE(utf8::charCount(asciiUtf8) == 13)
+    REQUIRE(asciiUtf8.length() == 20)
+
+END_TEST
+
+
 ///////////////////////////////////////////////////////////////////////////////
 
 int runTests(void)
@@ -539,6 +559,7 @@ int runTests(void)
     RUN_TEST(test60)
     RUN_TEST(test70)
     RUN_TEST(test80)
+    RUN_TEST(test90)
 
     const int err{FINISHED};
     OUTPUT_SUMMARY;

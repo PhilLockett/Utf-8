@@ -116,7 +116,7 @@ std::string unicodeToUtf8(int unicode)
  * @brief Determine the UTF-8 byte count from the string buffer.
  * 
  * @param buffer string containing the UTF-8 character.
- * @return size_t the UTF-8 byte count.
+ * @return size_t the UTF-8 byte count, or 0 if not UTF-8.
  */
 size_t numUtf8Bytes(const std::string_view & buffer)
 {
@@ -205,6 +205,35 @@ bool utf8ToUnicode(const std::string_view & buffer, int & unicode, int & length)
     return true;
 }
 
+/**
+ * @brief Count the number of characters in the string, which may be different 
+ * to the string length if UTF-8 characters are found.
+ * 
+ * @param buffer possibly containing UTF-8 characters.
+ * @return size_t character count.
+ */
+size_t charCount(const std::string_view & buffer)
+{
+    const size_t length{buffer.length()};
+    size_t count{};
+
+    for (int i{}; i < length; ++i)
+    {
+        const std::string_view view{buffer.substr(i)};
+        const size_t bytes{numUtf8Bytes(view)};
+
+        if (bytes)
+        {
+            i += bytes-1;
+        }
+
+        ++count;
+    }
+
+
+    return count;
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // Unicode and/or UTF-8 to HTML.
@@ -255,7 +284,7 @@ std::string useCharacterRefs(const std::string & buffer)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// Change for a UTF-8 string.
+// Change case for a UTF-8 string.
 
 /**
  * @brief Check if the given string starts with an uppercase character.
@@ -394,7 +423,7 @@ void makeUpper(std::string & buffer)
         if (lower == 0)
         {
             // Skip over any UTF-8 bytes.
-            auto bytes{numUtf8Bytes(lead)};
+            const size_t bytes{numUtf8Bytes(lead)};
             if (bytes)
             {
                 i += bytes-1;

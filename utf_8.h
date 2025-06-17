@@ -32,6 +32,7 @@ namespace utf8 {
 extern size_t getUtf8Length(int unicode, char & lead);
 extern std::string unicodeToUtf8(int unicode);
 extern bool utf8ToUnicode(const std::string_view & buffer, int & unicode, int & length);
+extern size_t charCount(const std::string_view & buffer);
 
 extern void useCharacterRefs(std::string & buffer);
 extern std::string useCharacterRefs(const std::string & buffer);
